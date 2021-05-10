@@ -1,7 +1,8 @@
 import React from 'react';
+import PostsTable from './PostsTable';
 
 const App = () => {
-  return <div>hello world!</div>;
+  return <PostsTable />;
 };
 
 export default App;
