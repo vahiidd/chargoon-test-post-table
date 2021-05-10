@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
+import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -8,6 +7,8 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
+import React, { useEffect, useState } from 'react';
+import { useHistory, useLocation } from 'react-router-dom';
 
 interface Column {
   id: 'id' | 'userId' | 'title' | 'body';
@@ -45,24 +46,6 @@ const columns: Column[] = [
   },
 ];
 
-interface Data {
-  name: string;
-  code: string;
-  population: number;
-  size: number;
-  density: number;
-}
-
-function createData(
-  name: string,
-  code: string,
-  population: number,
-  size: number
-): Data {
-  const density = population / size;
-  return { name, code, population, size, density };
-}
-
 const useStyles = makeStyles({
   root: {
     width: '100%',
@@ -73,19 +56,29 @@ const useStyles = makeStyles({
 });
 
 const PostsTable = () => {
+  const history = useHistory();
+  const location = useLocation();
   const classes = useStyles();
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [page, setPage] = useState(() => {
+    return location.search
+      ? +location.search.split('&')[0].split('=')[1] - 1
+      : 0;
+  });
+  const [rowsPerPage, setRowsPerPage] = useState(() => {
+    return location.search ? +location.search.split('&')[1].split('=')[1] : 10;
+  });
   const [posts, setPosts] = useState<Post[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleChangePage = (event: unknown, newPage: number) => {
+    history.push(`/?page=${newPage + 1}&take=${rowsPerPage}`);
     setPage(newPage);
   };
 
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
+    history.push(`/?page=1&take=${+event.target.value}`);
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
@@ -99,7 +92,9 @@ const PostsTable = () => {
   };
 
   useEffect(() => {
+    history.push(`/?page=${page + 1}&take=${rowsPerPage}`);
     fetchPosts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (isLoading) {
@@ -127,7 +122,16 @@ const PostsTable = () => {
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((post) => {
                 return (
-                  <TableRow hover role='checkbox' tabIndex={-1} key={post.id}>
+                  <TableRow
+                    onClick={() => {
+                      history.push(`/comment/${post.id}`);
+                    }}
+                    hover
+                    role='checkbox'
+                    tabIndex={-1}
+                    key={post.id}
+                    style={{ cursor: 'pointer' }}
+                  >
                     {columns.map((column) => {
                       const value = post[column.id];
                       return <TableCell key={column.id}>{value}</TableCell>;
