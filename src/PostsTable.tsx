@@ -9,6 +9,7 @@ import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import React, { useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
+import LoadingSpinner from './LoadingSpinner';
 
 interface Column {
   id: 'id' | 'userId' | 'title' | 'body';
@@ -55,6 +56,18 @@ const useStyles = makeStyles({
   },
 });
 
+const correctionRowsPerPageNumber = (page: number) => {
+  const pageOptions = [10, 25, 100];
+  if (pageOptions.includes(page)) return page;
+  if (page < 10) return 10;
+  else if (page < 25) {
+    return 25 - page < page - 10 ? 25 : 10;
+  } else if (page < 100) {
+    return 100 - page < page - 25 ? 100 : 25;
+  } else if (page > 100) return 100;
+  return page;
+};
+
 const PostsTable = () => {
   const history = useHistory();
   const location = useLocation();
@@ -65,7 +78,11 @@ const PostsTable = () => {
       : 0;
   });
   const [rowsPerPage, setRowsPerPage] = useState(() => {
-    return location.search ? +location.search.split('&')[1].split('=')[1] : 10;
+    return location.search
+      ? correctionRowsPerPageNumber(
+          +location.search.split('&')[1].split('=')[1]
+        )
+      : 10;
   });
   const [posts, setPosts] = useState<Post[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -98,7 +115,7 @@ const PostsTable = () => {
   }, []);
 
   if (isLoading) {
-    return <h1>loading...</h1>;
+    return <LoadingSpinner />;
   }
 
   return (

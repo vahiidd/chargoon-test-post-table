@@ -1,14 +1,14 @@
 import React from 'react';
-import PostsTable from './PostsTable';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import Comments from './Comments';
+import CommentsList from './CommentsList';
+import PostsTable from './PostsTable';
 
 const App = () => {
   return (
     <BrowserRouter>
       <Switch>
         <Route exact path='/' component={PostsTable} />
-        <Route exact path='/comment/:id' component={Comments} />
+        <Route exact path='/comment/:id' component={CommentsList} />
       </Switch>
     </BrowserRouter>
   );

@@ -1,8 +1,7 @@
-import React from 'react';
-import { useCallback } from 'react';
-import { useEffect } from 'react';
-import { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import LoadingSpinner from './LoadingSpinner';
+import CommentCard from './CommentCard';
 
 interface Comment {
   postId: number;
@@ -12,7 +11,7 @@ interface Comment {
   body: string;
 }
 
-const Comments = () => {
+const CommentsList = () => {
   const [comments, setComments] = useState<Comment[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { id } = useParams() as { id: string };
@@ -32,20 +31,16 @@ const Comments = () => {
   }, [fetchComments]);
 
   if (isLoading) {
-    return <h1>Loading...</h1>;
+    return <LoadingSpinner />;
   }
 
   return (
     <div>
-      {comments.map((comment) =>
-        Object.entries(comment).map(([key, value]) => (
-          <p>
-            {key} === {value}
-          </p>
-        ))
-      )}
+      {comments.map((comment) => (
+        <CommentCard key={comment.id} {...comment} />
+      ))}
     </div>
   );
 };
 
-export default Comments;
+export default CommentsList;
