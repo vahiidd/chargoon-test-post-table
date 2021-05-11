@@ -1,5 +1,23 @@
 import React from 'react';
-import { Typography } from '@material-ui/core';
+import { makeStyles, Typography } from '@material-ui/core';
+import { findByLabelText } from '@testing-library/react';
+
+const useStyles = makeStyles({
+  root: {
+    width: '70%',
+    height: 'max-content',
+    border: '1px solid lightgray',
+    borderRadius: 10,
+    boxShadow: '0 5px 15px gray',
+    margin: '20px auto',
+    padding: '20px',
+  },
+  card: {
+    '& *': {
+      display: 'inline',
+    },
+  },
+});
 
 interface CommentCardType {
   postId: number;
@@ -16,35 +34,29 @@ const CommentCard: React.FC<CommentCardType> = ({
   email,
   body,
 }) => {
+  const classes = useStyles();
+
   return (
-    <div
-      style={{
-        width: '70%',
-        height: 'max-content',
-        border: '1px solid black',
-        margin: '10px auto',
-        padding: '20px'
-      }}
-    >
-      <div>
+    <div className={classes.root}>
+      <div className={classes.card}>
         <Typography variant='h5'>postId: </Typography>
-        <p>{postId}</p>
+        <Typography>{postId}</Typography>
       </div>
-      <div>
+      <div className={classes.card}>
         <Typography variant='h5'>id: </Typography>
-        <p>{id}</p>
+        <Typography>{id}</Typography>
       </div>
-      <div>
+      <div className={classes.card}>
         <Typography variant='h5'>name: </Typography>
-        <p>{name}</p>
+        <Typography>{name}</Typography>
       </div>
-      <div>
+      <div className={classes.card}>
         <Typography variant='h5'>email: </Typography>
-        <p>{email}</p>
+        <Typography>{email}</Typography>
       </div>
-      <div>
+      <div className={classes.card}>
         <Typography variant='h5'>body: </Typography>
-        <p>{body}</p>
+        <Typography>{body}</Typography>
       </div>
     </div>
   );
