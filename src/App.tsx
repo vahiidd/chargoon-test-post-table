@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import CommentsList from './CommentsList';
-import PostsTable from './PostsTable';
+import CommentsList from './components/CommentsList';
+import PostsTable from './components/PostsTable';
 
 const App = () => {
   return (

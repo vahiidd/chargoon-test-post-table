@@ -9,20 +9,9 @@ import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import React, { useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
+import { postsUrl } from '../helper/fetchUrl';
 import LoadingSpinner from './LoadingSpinner';
-
-interface Column {
-  id: 'id' | 'userId' | 'title' | 'body';
-  label: string;
-  minWidth?: number;
-}
-
-interface Post {
-  id: string;
-  userId: string;
-  title: string;
-  body: string;
-}
+import { Column, Post } from './types';
 
 const columns: Column[] = [
   {
@@ -102,7 +91,7 @@ const PostsTable = () => {
 
   const fetchPosts = async () => {
     setIsLoading(true);
-    const res = await fetch('https://jsonplaceholder.typicode.com/posts/');
+    const res = await fetch(postsUrl());
     const data = await res.json();
     setPosts(data);
     setIsLoading(false);

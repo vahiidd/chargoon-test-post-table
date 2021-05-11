@@ -4,6 +4,8 @@ import LoadingSpinner from './LoadingSpinner';
 import CommentCard from './CommentCard';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core';
+import { Comment } from './types';
+import { commentsUrl } from '../helper/fetchUrl';
 
 const useStyles = makeStyles({
   backButton: {
@@ -12,14 +14,6 @@ const useStyles = makeStyles({
     left: '10px',
   },
 });
-
-interface Comment {
-  postId: number;
-  id: number;
-  name: string;
-  email: string;
-  body: string;
-}
 
 const CommentsList = () => {
   const classes = useStyles();
@@ -30,9 +24,7 @@ const CommentsList = () => {
 
   const fetchComments = useCallback(async () => {
     setIsLoading(true);
-    const res = await fetch(
-      `https://jsonplaceholder.typicode.com/posts/${id}/comments`
-    );
+    const res = await fetch(commentsUrl(id));
     const data = await res.json();
     setComments(data);
     setIsLoading(false);

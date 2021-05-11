@@ -1,6 +1,6 @@
-import React from 'react';
 import { makeStyles, Typography } from '@material-ui/core';
-import { findByLabelText } from '@testing-library/react';
+import React from 'react';
+import { CommentCardType } from './types';
 
 const useStyles = makeStyles({
   root: {
@@ -18,14 +18,6 @@ const useStyles = makeStyles({
     },
   },
 });
-
-interface CommentCardType {
-  postId: number;
-  id: number;
-  name: string;
-  email: string;
-  body: string;
-}
 
 const CommentCard: React.FC<CommentCardType> = ({
   postId,
